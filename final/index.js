@@ -3,7 +3,15 @@ window.addEventListener("load",function(){
     //............................................				
     //Get our extended GL Context Object
     glManager = new glExtendedContext("glcanvas").setSize(500,500).clear();
-    squareDrawer = new SquareDrawer(glManager);
+    //squareDrawer = new SquareDrawer(glManager);
+    gShader = new Shader(glManager, vertexShader, fragmentShader);
+
+    var uColor	= glManager.context.getUniformLocation(this.program,"uColor");
+	glManager.context.uniform3fv(uColor, aryColor);
+	glManager.context.useProgram(null); //Done setting up shader
+
+    gModal = new Modal(Primatives.GridAxis.createMesh(glManager));
+    gShader.activate().renderModal(gModal);
 
     // // 4. Get Location of Uniforms and Attributes.
     // gl.useProgram(shaderProg);

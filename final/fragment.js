@@ -3,9 +3,8 @@
 const fragmentShader = `#version 300 es
 precision mediump float;
 
+in vec4 color;
 out vec4 finalColor;
 
-void main(void) {
-    finalColor = vec4(0.0, 0.0, 0.0, 1.0);
-}
+void main(void){ finalColor = color; }
 `;
