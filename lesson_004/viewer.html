@@ -29,11 +29,13 @@
 				//mesh.drawMode = gl.LINES;
 				//gModal = new Modal(mesh);
 				// var laberintoHardCodeado = {x: 15, y: 20};
-				var laberintoHardCodeado = new Laberinto(10,10);
-				gModal = new Modal(Primatives.GridAxis.createMesh(gl,laberintoHardCodeado));	
-
+				var laberintoHardCodeado = mazePrim(10,10);
+				document.getElementById('out').innerHTML = display(laberintoHardCodeado);
+				updateCanvas(laberintoHardCodeado);
+				
 				//Start Rendering
 				RLoop = new RenderLoop(onRender).start();
+				
 			});
 
 			function onRender(dt){

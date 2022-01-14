@@ -5,179 +5,60 @@ Primatives.GridAxis = class {
 		var x = laberinto.x;
 		var y = laberinto.y;
 		var matriz = laberinto.matriz;
-		var verts = [],
-			size = 1.8;			// W/H of the outer box of the grid, from origin we can only go 1 unit in each direction, so from left to right is 2 units max
-			// div = 10.0,			// How to divide up the grid
-			// step = size / div,	// Steps between each line, just a number we increment by for each line in the grid.
-			// half = size / 2;	// From origin the starting position is half the size.
+		var verts = [];
+		var	size = 1.8;	// tamaño arbitrario a usar del canvas
 
-		var px1;	//Temp variable for position value.
-		var px2;
-		var px;
-		var py;
-		var py1;
-		var py2;
 		var stepX = size/ x;
-		var half = size / 2
 		var stepY = size/ y;
-
-		// var tx = size / x;
-		// const tx = (px) => ((px/x) * stepX )-0.9;  
-		const tx = (px) => (px * stepX )-0.9;
-		const ty = (py) => (py * stepY )-0.9;
-		// var ty = size / y;
+		const tx = (px) => (px * stepX )-0.9; // transformaciones
+		const ty = (py) => (-py * stepY )+0.9;
 		// test dibujar de a celdas 
-		var celda, celdaArriba, celdaAbajo, celdaIzq, celdaDer;
-		// console.log(laberinto);
-		for(var i=1; i<x-1; i++){
-			
-			for(var j=1; j<y-1; j++){
-				celda = matriz[i][j];
-				celdaArriba = matriz[i][j-1];
-				celdaAbajo = matriz[i][j+1];
-				celdaIzq = matriz[i-1][j];
-				celdaDer = matriz[i+1][j];
+		var celda;
 
-				// caso tenemos que dibujar "paredes"
-				if(celda.estado==="abierta"){
-					// dibujamos las de arriba
-
-					
-					if(celdaArriba.estado==="cerrada"){
-						console.log(celda);
-						console.log(celdaArriba);
-						// px1 = half - (tx * celdaArriba.x);
-						px1 = tx(celdaArriba.x);
-						px2 = tx(celdaArriba.x + 1);
-						// px2 = half - (tx * (celdaArriba.x +1));
-						// px = half - (i * stepX);
-						// py = half - (j * stepY);
-						// py = half - (ty * celdaArriba.y);
-						py = ty(celdaArriba.y);
-						// py2 = ty * (celda.y+1);
-						verts.push(px1);	//x1
-						verts.push(py);		//y1
-						verts.push(0);		//z1
-						verts.push(0);		//c1
- 
-						verts.push(px2);	//x2
-						verts.push(py);		//y2
-						verts.push(0);		//z2
-						verts.push(0);		//c2
-					}
-					// // las de abajo
-					// if(celdaAbajo.estado==="cerrada"){
-					// 	px1 = half - (tx * celdaAbajo.x);
-					// 	px2 = half - (tx * (celdaAbajo.x +1));
-					// 	// px = half - (i * stepX);
-					// 	// py = half - (j * stepY);
-					// 	py = half - (ty * celdaAbajo.y);
-					// 	// py2 = ty * (celda.y+1);
-					// 	verts.push(px1);	//x1
-					// 	verts.push(py);		//y1
-					// 	verts.push(0);		//z1
-					// 	verts.push(0);		//c1
- 
-					// 	verts.push(px2);	//x2
-					// 	verts.push(py);		//y2
-					// 	verts.push(0);		//z2
-					// 	verts.push(0);		//c2
-					// }
-					// // las de izq
-					// if(celdaIzq.estado==="cerrada"){
-					// 	px = half - (tx * celdaIzq.x);
-					// 	// px2 = half - (tx * (celdaAbajo.x +1));
-					// 	// px = half - (i * stepX);
-					// 	// py = half - (j * stepY);
-					// 	py1 = half - (ty * celdaIzq.y);
-					// 	py2 = half - (ty * celdaIzq.y +1);
-					// 	// py2 = ty * (celda.y+1);
-					// 	verts.push(px);	//x1
-					// 	verts.push(py1);		//y1
-					// 	verts.push(0);		//z1
-					// 	verts.push(0);		//c1
- 
-					// 	verts.push(px);	//x2
-					// 	verts.push(py2);		//y2
-					// 	verts.push(0);		//z2
-					// 	verts.push(0);		//c2
-					// }
-				}
-			}
-			
+		let addVertex = (x,y,z,c) => {
+			verts.push(x);
+			verts.push(y);
+			verts.push(z);
+			verts.push(c);
 		}
-		// verts.push(0);
-		// verts.push(0);
-		// verts.push(0);
-		// verts.push(0);
 
-		// verts.push(size/x);
-		// verts.push(0);
-		// verts.push(0);
-		// verts.push(0);
+		let drawSquare = (celda) => {
+			var i = celda.x;
+			var j = celda.y;
+			if(celda.estado === "cerrada"){
+				// linea arriba
+				if(j===0 || matriz[i][j-1].estado !== "cerrada"){
+					addVertex(tx(i), ty(j), 0,0);
+					addVertex(tx(i+1), ty(j), 0,0); 
+				}
+				
+				// linea derecha
+				if(i===x-1 || matriz[i+1][j].estado !== "cerrada"){
+					addVertex(tx(i+1), ty(j), 0,0); 
+					addVertex(tx(i+1), ty(j+1), 0,0);
+				}
 
+				// linea abajo
+				if(j===y-1 || matriz[i][j+1].estado !== "cerrada"){
+					addVertex(tx(i+1), ty(j+1), 0,0);
+					addVertex(tx(i), ty(j+1), 0,0);
+				}
+				
+				// linea izq
+				if(i===0 || matriz[i-1][j].estado !== "cerrada"){
+					addVertex(tx(i), ty(j+1), 0,0);
+					addVertex(tx(i), ty(j), 0,0);
+				}
+				
+			}
+		}
 
-		// lineas horizontales
-		// funcando
-		// var div = x;
-		// var step = size/ x;
-		// var half = size / 2;
-		// for(var i=0; i <= div; i++){
-
-
-
-		// 	//Horizontal line
-		// 	p = half - (i * step);
-		// 	verts.push(-half);	//x1
-		// 	verts.push(p);		//y1
-		// 	verts.push(0);		//z1
-		// 	verts.push(0);		//c1
-
-		// 	verts.push(half);	//x2
-		// 	verts.push(p);		//y2
-		// 	verts.push(0);		//z2
-		// 	verts.push(1);		//c2
-		// }
-
-		// lineas verticales
-		// div = y;
-		// step = size/ y;
-		// half = size / 2;
-		// for(var i=0; i <= div; i++){
-		// 	//Vertical line
-		// 	p = -half + (i * step);
-		// 	verts.push(p);		//x1
-		// 	verts.push(half);	//y1
-		// 	verts.push(0);		//z1
-		// 	verts.push(0);		//c2
-
-		// 	verts.push(p);		//x2
-		// 	verts.push(-half);	//y2
-		// 	verts.push(0);		//z2
-		// 	verts.push(1);		//c2
-		// }
-
-		//TODO : Remove the following, its only to demo extra lines can be thrown in.
-		// verts.push(-half);	//x1
-		// verts.push(-half);	//y1
-		// verts.push(0);		//z1
-		// verts.push(2);		//c2
-
-		// verts.push(half);	//x2
-		// verts.push(half);	//y2
-		// verts.push(0);		//z2
-		// verts.push(2);		//c2
-
-		// verts.push(-half);	//x1
-		// verts.push(half);	//y1
-		// verts.push(0);		//z1
-		// verts.push(3);		//c2
-
-		// verts.push(half);	//x2
-		// verts.push(-half);	//y2
-		// verts.push(0);		//z2
-		// verts.push(3);		//c2
-
+		for(let i = 0; i < x; i++) {
+			for(let j=0; j < y; j++) {
+				celda = matriz[i][j];
+				drawSquare(celda);
+			}
+		}
 
 		//Setup
 		var attrColorLoc = 4,
