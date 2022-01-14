@@ -28,7 +28,9 @@
 				//var mesh = gl.fCreateMeshVAO("lines",null,[ 0,1,0, 0,-1,0     ,-1,0,0, 1,0,0 ]);
 				//mesh.drawMode = gl.LINES;
 				//gModal = new Modal(mesh);
-				gModal = new Modal(Primatives.GridAxis.createMesh(gl,15,20));	
+				// var laberintoHardCodeado = {x: 15, y: 20};
+				var laberintoHardCodeado = new Laberinto(10,10);
+				gModal = new Modal(Primatives.GridAxis.createMesh(gl,laberintoHardCodeado));	
 
 				//Start Rendering
 				RLoop = new RenderLoop(onRender).start();
@@ -40,7 +42,7 @@
 			}
 
 			function updateCanvas(laberintoCreado){
-				gModal = new Modal(Primatives.GridAxis.createMesh(gl,laberintoCreado.x,laberintoCreado.y));	
+				gModal = new Modal(Primatives.GridAxis.createMesh(gl,laberintoCreado));	
 				gl.fClear();
 				gShader.activate().renderModal(gModal);
 			}
