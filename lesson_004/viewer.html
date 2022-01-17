@@ -10,9 +10,11 @@
 		</style>
 
 		<script src="gl.js"></script>
+		<script src="Math.js"></script>
 		<script src="shaders.js"></script>
 		<script src="RenderLoop.js"></script>
 		<script src="Modal.js"></script>
+		<script src="Transform.js"></script>
 		<script src="Primatives.js"></script>
 		<script src="maze.js"></script>
 
@@ -21,7 +23,7 @@
 
 			window.addEventListener("load",function(){
 				//Main Setup
-				gl = GLInstance("glcanvas").fSetSize(500,500).fClear();
+				gl = GLInstance("glcanvas").fSetSize(1000,1000).fClear();
 				gShader = new TestShader(gl,[ 0.0,0.0,0.0, 0.0,0.0,0.0, 0.0,0.0,0.0, 0.0,0.0,0.0]); //Gray,Red,Green,Blue
 				
 				//Setup our modal
@@ -40,12 +42,27 @@
 
 			function onRender(dt){
 				gl.fClear();
-				gShader.activate().renderModal(gModal);
+
+				var p = gModal.transform.position,				//Just an pointer to transform position, make code smaller 
+					angle = Math.atan2(p.y,p.x)  + (1*dt),		//Calc the current angle plus 1 degree per second rotation
+					radius = Math.sqrt(p.x * p.x + p.y * p.y),	//Calc the distance from origin.
+					scale = Math.max(0.2,  Math.abs(Math.sin(angle)) * 1.2  );   //Just messing with numbers and seeing what happens :)
+
+				//-- Code Style One : Traditional -- 
+				gModal.setScale(scale,scale,1)
+				gModal.setPosition( radius * Math.cos(angle), radius * Math.sin(angle), 0 );
+				gModal.transform.rotation.z += 15 * dt;
+				gModal.transform.rotation.x += 30 * dt;
+				gModal.transform.rotation.y += 60 * dt;
+				gShader.activate().renderModal(gModal.preRender());
+
+				// gShader.activate().renderModal(gModal);
 			}
 
 			function updateCanvas(laberintoCreado){
 				gModal = new Modal(Primatives.GridAxis.createMesh(gl,laberintoCreado));	
 				gl.fClear();
+				
 				gShader.activate().renderModal(gModal);
 			}
 
