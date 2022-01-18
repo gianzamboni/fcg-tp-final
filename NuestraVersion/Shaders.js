@@ -6,7 +6,7 @@ class Shader{
 			this.gl = gl;
 			gl.useProgram(this.program);
 			this.attribLoc = ShaderUtil.getStandardAttribLocations(gl,this.program);
-			this.uniformLoc = {};	//TODO : Replace in later lessons with get standardUniformLocations.
+			this.uniformLoc = ShaderUtil.getStandardUniformLocations(gl,this.program);
 		}
 
 		//Note :: Extended shaders should deactivate shader when done calling super and setting up custom parts in the constructor.
@@ -16,6 +16,10 @@ class Shader{
 	//Methods
 	activate(){ this.gl.useProgram(this.program); return this; }
 	deactivate(){ this.gl.useProgram(null); return this; }
+
+	setPerspective(matData){	this.gl.uniformMatrix4fv(this.uniformLoc.perspective, false, matData); return this; }
+	setModalMatrix(matData){	this.gl.uniformMatrix4fv(this.uniformLoc.modalMatrix, false, matData); return this; }
+	setCameraMatrix(matData){	this.gl.uniformMatrix4fv(this.uniformLoc.cameraMatrix, false, matData); return this; }
 
 	//function helps clean up resources when shader is no longer needed.
 	dispose(){
@@ -32,7 +36,8 @@ class Shader{
 
 	//Handle rendering a modal
 	renderModal(modal){
-		this.gl.bindVertexArray(modal.mesh.vao);	//Enable VAO, this will set all the predefined attributes for the shader
+		this.setModalMatrix(modal.transform.getViewMatrix());	//Set the transform, so the shader knows where the modal exists in 3d space
+		this.gl.bindVertexArray(modal.mesh.vao);				//Enable VAO, this will set all the predefined attributes for the shader
 		
 		if(modal.mesh.indexCount) this.gl.drawElements(modal.mesh.drawMode, modal.mesh.indexLength, gl.UNSIGNED_SHORT, 0);
 		else this.gl.drawArrays(modal.mesh.drawMode, 0, modal.mesh.vertexCount);
@@ -142,6 +147,15 @@ class ShaderUtil{
 			position:	gl.getAttribLocation(program,ATTR_POSITION_NAME),
 			norm:		gl.getAttribLocation(program,ATTR_NORMAL_NAME),
 			uv:			gl.getAttribLocation(program,ATTR_UV_NAME)
+		};
+	}
+
+	static getStandardUniformLocations(gl,program){
+		return {
+			perspective:	gl.getUniformLocation(program,"uPMatrix"),
+			modalMatrix:	gl.getUniformLocation(program,"uMVMatrix"),
+			cameraMatrix:	gl.getUniformLocation(program,"uCameraMatrix"),
+			mainTexture:	gl.getUniformLocation(program,"uMainTex")
 		};
 	}
 }

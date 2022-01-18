@@ -1,5 +1,6 @@
 var Primatives = {};
 Primatives.GridAxis = class {
+	static createModal(gl,laberinto){ return new Modal(Primatives.GridAxis.createMesh(gl,laberinto)); }
 	static createMesh(gl, laberinto){
 		//Dynamiclly create a grid
 		var x = laberinto.x;
@@ -28,26 +29,26 @@ Primatives.GridAxis = class {
 			if(celda.estado === "cerrada"){
 				// linea arriba
 				if(j===0 || matriz[i][j-1].estado !== "cerrada"){
-					addVertex(tx(i), ty(j), 0,0);
-					addVertex(tx(i+1), ty(j), 0,0); 
+					addVertex(tx(i),  0, ty(j),0);
+					addVertex(tx(i+1),  0, ty(j),0); 
 				}
 				
 				// linea derecha
 				if(i===x-1 || matriz[i+1][j].estado !== "cerrada"){
-					addVertex(tx(i+1), ty(j), 0,0); 
-					addVertex(tx(i+1), ty(j+1), 0,0);
+					addVertex(tx(i+1),  0, ty(j),0); 
+					addVertex(tx(i+1),  0, ty(j+1),0);
 				}
 
 				// linea abajo
 				if(j===y-1 || matriz[i][j+1].estado !== "cerrada"){
-					addVertex(tx(i+1), ty(j+1), 0,0);
-					addVertex(tx(i), ty(j+1), 0,0);
+					addVertex(tx(i+1),  0, ty(j+1),0);
+					addVertex(tx(i),  0, ty(j+1),0);
 				}
 				
 				// linea izq
 				if(i===0 || matriz[i-1][j].estado !== "cerrada"){
-					addVertex(tx(i), ty(j+1), 0,0);
-					addVertex(tx(i), ty(j), 0,0);
+					addVertex(tx(i),  0, ty(j+1),0);
+					addVertex(tx(i),  0, ty(j),0);
 				}
 				
 			}

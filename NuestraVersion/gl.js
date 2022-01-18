@@ -121,5 +121,8 @@ function GLInstance(canvasID){
 		return this;
 	}
 
+		//Set the size of the canvas to fill a % of the total screen.
+		gl.fFitScreen = function(wp,hp){ return this.fSetSize(window.innerWidth * (wp || 1),window.innerHeight * (hp || 1)); }
+
 	return gl;
 }
