@@ -87,11 +87,14 @@ class CameraController{
 		this.prevX = 0;									//Previous X,Y position on mouse move
 		this.prevY = 0;
 
-		this.onUpHandler = function(e){ oThis.onMouseUp(e); };		//Cache func reference that gets bound and unbound a lot
-		this.onMoveHandler = function(e){ oThis.onMouseMove(e); }
+		this.onUpHandler = (event) => this.onMouseUp(event);		//Cache func reference that gets bound and unbound a lot
+		this.onMoveHandler = (event) => this.onMouseMove(event);
 
-		this.canvas.addEventListener("mousedown",function(e){ oThis.onMouseDown(e); });		//Initializes the up and move events
-		this.canvas.addEventListener("mousewheel", function(e){ oThis.onMouseWheel(e); });	//Handles zoom/forward movement
+		this.canvas.addEventListener("mousedown", (event) => this.onMouseDown(event) );		//Initializes the up and move events
+		this.canvas.addEventListener("mousewheel", (event) => { 
+			event.preventDefault();	
+			this.onMouseWheel(event); 
+		});	//Handles zoom/forward movement
 	}
 
 	//Transform mouse x,y cords to something useable by the canvas.

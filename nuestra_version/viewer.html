@@ -26,8 +26,7 @@
 
 			window.addEventListener("load",function(){
 				//Main Setup
-				// gl = GLInstance("glcanvas").fSetSize(1000,1000).fClear();
-				gl = GLInstance("glcanvas").fFitScreen(0.95,0.9).fClear(); //.fSetSize(500,500)
+				gl = GLInstance("glcanvas").fFitScreen(0.95,0.7).fClear(); //.fSetSize(500,500)
 
 				gCamera = new Camera(gl);
 				gCamera.transform.position.set(0,1,3);
@@ -36,23 +35,10 @@
 				//Setup Grid
 				gGridShader = new GridAxisShader(gl,gCamera.projectionMatrix);
 
-				// gGridShader = new GridAxisShader(gl,gCamera.projectionMatrix);
-				
-				// gGridModal = Primatives.GridAxis.createModal(gl,true);
-				
 				gShader = new TestShader(gl,[ 0.0,0.0,0.0, 0.0,0.0,0.0, 0.0,0.0,0.0, 0.0,0.0,0.0]); //Gray,Red,Green,Blue
-				
-				//Setup our modal
-				//var mesh = gl.fCreateMeshVAO("lines",null,[ 0,1,0, 0,-1,0     ,-1,0,0, 1,0,0 ]);
-				//mesh.drawMode = gl.LINES;
-				//gModal = new Modal(mesh);
-				// var laberintoHardCodeado = {x: 15, y: 20};
-
-				// por aca la cague con algo porque no se actualiza al cambiar los params
 
 				var laberintoHardCodeado = mazePrim(20,20);
 				gGridModal = Primatives.GridAxis.createModal(gl,laberintoHardCodeado);
-				document.getElementById('out').innerHTML = display(laberintoHardCodeado);
 				updateCanvas(laberintoHardCodeado);
 				
 				//Start Rendering
@@ -60,24 +46,7 @@
 				
 			});
 
-			function onRender(dt){
-				// gl.fClear();
-
-				// var p = gModal.transform.position,				//Just an pointer to transform position, make code smaller 
-				// 	angle = Math.atan2(p.y,p.x)  + (1*dt),		//Calc the current angle plus 1 degree per second rotation
-				// 	radius = Math.sqrt(p.x * p.x + p.y * p.y),	//Calc the distance from origin.
-				// 	scale = Math.max(0.2,  Math.abs(Math.sin(angle)) * 1.2  );   //Just messing with numbers and seeing what happens :)
-
-				// //-- Code Style One : Traditional -- 
-				// gModal.setScale(scale,scale,1)
-				// gModal.setPosition( radius * Math.cos(angle), radius * Math.sin(angle), 0 );
-				// gModal.transform.rotation.z += 15 * dt;
-				// gModal.transform.rotation.x += 30 * dt;
-				// gModal.transform.rotation.y += 60 * dt;
-				// gShader.activate().renderModal(gModal.preRender());
-
-				// gShader.activate().renderModal(gModal);
-
+			function onRender(){
 				gCamera.updateViewMatrix();
 				gl.fClear();
 				
@@ -87,10 +56,9 @@
 			}
 
 			function updateCanvas(laberintoCreado){
-				gModal = new Modal(Primatives.GridAxis.createMesh(gl,laberintoCreado));	
-				gl.fClear();
-				
-				gShader.activate().renderModal(gModal);
+				gGridModal = Primatives.GridAxis.createModal(gl,laberintoCreado);	
+
+				onRender();
 			}
 
 			class TestShader extends Shader{
@@ -119,7 +87,6 @@
 		</form>
 		<input type="button" alt="submit" onClick="duom();" value="Generate" style="margin-top:10px;" >
 		</div>
-		<pre id="out" style="justify-content: center;"></pre>
 	<div>
 		<canvas id="glcanvas"></canvas>
 	</div>

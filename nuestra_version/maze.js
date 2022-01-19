@@ -6,7 +6,6 @@ function duom(){
     var b = parseInt(document.getElementById("width").value);
 
     var laberintoCreado = mazePrim(a,b);
-    document.getElementById('out').innerHTML = display(laberintoCreado);
     updateCanvas(laberintoCreado);
 }
 
