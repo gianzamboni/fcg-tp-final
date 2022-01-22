@@ -7,7 +7,7 @@ class Transform{
 		this.matView 	= new Matrix4();		//Cache the results when calling updateMatrix
 		this.matNormal	= new Float32Array(9);	//This is a Mat3, raw array to hold the values is enough for what its used for
 
-		//Direction Vectors
+		//Direction Vectors, Need 4 elements for math operations with matrices
 		this.forward	= new Float32Array(4);	//When rotating, keep track of what the forward direction is
 		this.up			= new Float32Array(4);	//what the up direction is, invert to get bottom
 		this.right		= new Float32Array(4);	//what the right direction is, invert to get left

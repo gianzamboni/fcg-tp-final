@@ -70,7 +70,6 @@ Camera.MODE_ORBIT = 1;	//Movement is locked to rotate around the origin, Great f
 
 class CameraController{
 	constructor(gl,camera){
-		var oThis = this;
 		var box = gl.canvas.getBoundingClientRect();
 		this.canvas = gl.canvas;						//Need access to the canvas html element, main to access events
 		this.camera = camera;							//Reference to the camera to control

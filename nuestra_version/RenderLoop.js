@@ -15,9 +15,9 @@ class RenderLoop{
 		this.isActive = false;		//Control the On/Off state of the render loop
 		this.fps = 0;				//Save the value of how fast the loop is going.
 
-		if(!fps && fps > 0){ //Build a run method that limits the framerate
+		//if(!fps && fps > 0){ //Build a run method that limits the framerate
+		if(fps != undefined && fps > 0){ //Build a run method that limits the framerate
 			this.msFpsLimit = 1000/fps; //Calc how many milliseconds per frame in one second of time.
-			
 			this.run = function(){
 				//Calculate Deltatime between frames and the FPS currently.
 				var msCurrent	= performance.now(),

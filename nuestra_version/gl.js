@@ -24,8 +24,13 @@ function GLInstance(canvasID){
 
 	//...................................................
 	//Setup GL, Set all the default configurations we need.
-	gl.clearColor(1.0,1.0,1.0,1.0);		//Set clear color
-
+	gl.cullFace(gl.BACK);								//Back is also default
+	gl.frontFace(gl.CCW);								//Dont really need to set it, its ccw by default.
+	gl.enable(gl.DEPTH_TEST);							//Shouldn't use this, use something else to add depth detection
+	gl.enable(gl.CULL_FACE);							//Cull back face, so only show triangles that are created clockwise
+	gl.depthFunc(gl.LEQUAL);							//Near things obscure far things
+	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);	//Setup default alpha blending
+	gl.clearColor(1.0,1.0,1.0,1.0);	//Set clear color
 
 	//...................................................
 	//Methods
@@ -90,15 +95,16 @@ function GLInstance(canvasID){
 		if(aryInd !== undefined && aryInd != null){
 			rtn.bufIndex = this.createBuffer();
 			rtn.indexCount = aryInd.length;
-			this.bindBuffer(this.ELEMENT_ARRAY_BUFFER, rtn.bufIndex);
+			this.bindBuffer(this.ELEMENT_ARRAY_BUFFER, rtn.bufIndex);  
 			this.bufferData(this.ELEMENT_ARRAY_BUFFER, new Uint16Array(aryInd), this.STATIC_DRAW);
-			this.bindBuffer(this.ELEMENT_ARRAY_BUFFER,null);
+			//this.bindBuffer(this.ELEMENT_ARRAY_BUFFER,null); //TODO REMOVE THIS AND ADD TO CLEANUP
 		}
 
 		//Clean up
 		this.bindVertexArray(null);					//Unbind the VAO, very Important. always unbind when your done using one.
 		this.bindBuffer(this.ARRAY_BUFFER,null);	//Unbind any buffers that might be set
-
+		if(aryInd != null && aryInd !== undefined)  this.bindBuffer(this.ELEMENT_ARRAY_BUFFER,null);
+		
 		this.mMeshCache[name] = rtn;
 		return rtn;
 	}
@@ -121,8 +127,8 @@ function GLInstance(canvasID){
 		return this;
 	}
 
-		//Set the size of the canvas to fill a % of the total screen.
-		gl.fFitScreen = function(wp,hp){ return this.fSetSize(window.innerWidth * (wp || 1),window.innerHeight * (hp || 1)); }
+	//Set the size of the canvas to fill a % of the total screen.
+	gl.fFitScreen = function(wp,hp){ return this.fSetSize(window.innerWidth * (wp || 1),window.innerHeight * (hp || 1)); }
 
 	return gl;
 }
