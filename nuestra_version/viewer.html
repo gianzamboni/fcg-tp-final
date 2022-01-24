@@ -44,7 +44,9 @@
 				updateCanvas(laberintoHardCodeado);
 
 				gQuadModalShader = new TestShader(gl,gCamera.projectionMatrix);
-				gQuadModal = Primatives.MultiQuad.createModal(gl);
+				
+				// creo un quad para mostrarlo y testing
+				gQuadModal = Primatives.Quad.createModal(gl, laberintoHardCodeado);
 				
 				//Start Rendering
 				RLoop = new RenderLoop(onRender).start();
@@ -66,7 +68,9 @@
 
 			function updateCanvas(laberintoCreado){
 				gGridModal = Primatives.GridAxis.createModal(gl,laberintoCreado);
-				gQuadModal = Primatives.MultiQuad.createModal(gl);
+
+				// aca se muestra
+				gQuadModal = Primatives.Quad.createModal(gl, laberintoCreado);
 
 				onRender();
 			}
@@ -128,8 +132,12 @@
 		out vec4 finalColor;
 		void main(void){
 			//Square Border
+			/*
 			float c = (uv.x <= 0.1 || uv.x >=0.9 || uv.y <= 0.1 || uv.y >= 0.9)? 0.0 : 1.0;
 			finalColor = vec4(c,c,c,1.0-c);
+			*/
+			float c = 0.0;
+			finalColor = vec4(c,c,c,1.0);
 
 			//Circle
 			/*

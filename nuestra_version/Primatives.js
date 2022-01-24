@@ -1,11 +1,30 @@
 var Primatives = {};
 
 Primatives.Quad = class {
-	static createModal(gl){ return new Modal(Primatives.Quad.createMesh(gl)); }
-	static createMesh(gl){
-		var aVert = [ -0.5,0.5,0, -0.5,-0.5,0, 0.5,-0.5,0, 0.5,0.5,0 ],
+	static createModal(gl, laberinto){ return new Modal(Primatives.Quad.createMesh(gl, laberinto)); }
+	static createMesh(gl, laberinto){
+
+		var	size = 1.8;	// tamaño arbitrario a usar del canvas
+		var wall_size = 0.1;
+
+		var x = laberinto.x;
+		var y = laberinto.y;
+		var matriz = laberinto.matriz;
+
+		// original
+		// var aVert = [ -0.5,0.5,0, -0.5,-0.5,0, 0.5,-0.5,0, 0.5,0.5,0 ],
+		// aUV = [ 0,0, 0,1, 1,1, 1,0 ],
+		// 	aIndex = [ 0,1,2, 2,3,0 ];
+		
+		// ejemplo de una pared del laberinto negra
+		// var aVert = [ -0.1,0.1,0, -0.1,0,0, 0.1,0,0, 0.1,0.1,0 ],
+		// 	aUV = [ 0,0, 0,1, 1,1, 1,0 ],
+		// 	aIndex = [ 0,1,2,  2,3,0 ];
+
+		// ejemplo borde negro
+		var aVert = [ -size/2,wall_size,size/2, -size/2,0,size/2, size/2,0,size/2, size/2,wall_size,size/2 ],
 			aUV = [ 0,0, 0,1, 1,1, 1,0 ],
-			aIndex = [ 0,1,2, 2,3,0 ];
+			aIndex = [ 0,1,2,  2,3,0 ];
 		var mesh = gl.fCreateMeshVAO("Quad",aIndex,aVert,null,aUV);
 		mesh.noCulling = true;
 		mesh.doBlending = true;
