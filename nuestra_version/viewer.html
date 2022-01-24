@@ -40,13 +40,13 @@
 
 
 				var laberintoHardCodeado = mazePrim(20,20);
-				gGridModal = Primatives.GridAxis.createModal(gl,laberintoHardCodeado);
+				Primatives.GridAxis.createModal(gl,laberintoHardCodeado);
 				updateCanvas(laberintoHardCodeado);
 
 				gQuadModalShader = new TestShader(gl,gCamera.projectionMatrix);
 				
 				// creo un quad para mostrarlo y testing
-				gQuadModal = Primatives.Quad.createModal(gl, laberintoHardCodeado);
+				// gQuadModal = Primatives.Quad.createModal(gl, laberintoHardCodeado);
 				
 				//Start Rendering
 				RLoop = new RenderLoop(onRender).start();
@@ -67,10 +67,12 @@
 			}
 
 			function updateCanvas(laberintoCreado){
-				gGridModal = Primatives.GridAxis.createModal(gl,laberintoCreado);
+				Primatives.GridAxis.createModal(gl,laberintoCreado);
+				gQuadModal = new Modal(gl.mMeshCache["paredes"]);
+				// gGridModal = Primatives.GridAxis.createModal(gl,laberintoCreado);
 
 				// aca se muestra
-				gQuadModal = Primatives.Quad.createModal(gl, laberintoCreado);
+				gGridModal = new Modal(gl.mMeshCache["grid"]);
 
 				onRender();
 			}
@@ -136,7 +138,7 @@
 			float c = (uv.x <= 0.1 || uv.x >=0.9 || uv.y <= 0.1 || uv.y >= 0.9)? 0.0 : 1.0;
 			finalColor = vec4(c,c,c,1.0-c);
 			*/
-			float c = 0.0;
+			float c = 0.5;
 			finalColor = vec4(c,c,c,1.0);
 
 			//Circle

@@ -14,12 +14,12 @@ Primatives.Quad = class {
 		// original
 		// var aVert = [ -0.5,0.5,0, -0.5,-0.5,0, 0.5,-0.5,0, 0.5,0.5,0 ],
 		// aUV = [ 0,0, 0,1, 1,1, 1,0 ],
-		// 	aIndex = [ 0,1,2, 2,3,0 ];
+		// aIndex = [ 0,1,2, 2,3,0 ];
 		
 		// ejemplo de una pared del laberinto negra
 		// var aVert = [ -0.1,0.1,0, -0.1,0,0, 0.1,0,0, 0.1,0.1,0 ],
-		// 	aUV = [ 0,0, 0,1, 1,1, 1,0 ],
-		// 	aIndex = [ 0,1,2,  2,3,0 ];
+		// aUV = [ 0,0, 0,1, 1,1, 1,0 ],
+		// aIndex = [ 0,1,2,  2,3,0 ];
 
 		// ejemplo borde negro
 		var aVert = [ -size/2,wall_size,size/2, -size/2,0,size/2, size/2,0,size/2, size/2,wall_size,size/2 ],
@@ -77,6 +77,13 @@ Primatives.GridAxis = class {
 		var matriz = laberinto.matriz;
 		var verts = [];
 		var	size = 1.8;	// tamaño arbitrario a usar del canvas
+		var quadCounter = 0;
+
+
+		var wall_size = 0.1; // altura de la pared
+		var	aIndex = [ ], //0,1,2, 2,3,0
+		aUV = [ ], //0,0, 0,1, 1,1, 1,0 
+		aVert = [];		
 
 		var stepX = size/ x;
 		var stepY = size/ y;
@@ -91,6 +98,103 @@ Primatives.GridAxis = class {
 			verts.push(z);
 			verts.push(c);
 		}
+
+		// agrega pared de izquierda a derecha en la posicion de la celda
+		let addHorizontalWall = (x,z,qi) => {
+			
+			// let p = 0;
+
+			// aVert.push(-size/2,wall_size,size/2); 	// top left
+			// aVert.push(-size/2,0,size/2); 			// bottom left
+			// aVert.push(size/2,0,size/2); 			//bottom right
+			// aVert.push(size/2,wall_size,size/2 ); 	// top right
+
+			aVert.push(tx(x)  ,wall_size,ty(z)); 	// top left
+			aVert.push(tx(x)  ,0        ,ty(z)); 			// bottom left
+			aVert.push(tx(x+1),0        ,ty(z));			//bottom right
+			aVert.push(tx(x+1),wall_size,ty(z)); 	// top right
+
+			aUV.push(0,0, 0,1, 1,1, 1,0);		//Quad's UV
+			aIndex.push(qi,qi+1,qi+2, qi+2,qi+3,qi);	//Quad's Index
+
+			// aUV = [ 0,0, 0,1, 1,1, 1,0 ],
+			// aIndex = [ 0,1,2,  2,3,0 ];
+
+
+		}
+
+		// let addVerticalWall
+
+		let addVerticalWall = (x,z,qi) => {
+			
+			// let p = 0;
+
+			// aVert.push(-size/2,wall_size,size/2); 	// top left
+			// aVert.push(-size/2,0,size/2); 			// bottom left
+			// aVert.push(size/2,0,size/2); 			//bottom right
+			// aVert.push(size/2,wall_size,size/2 ); 	// top right
+
+			aVert.push(tx(x)  ,wall_size,ty(z)); 	// top left
+			aVert.push(tx(x)  ,0        ,ty(z)); 			// bottom left
+			aVert.push(tx(x),0        ,ty(z+1));			//bottom right
+			aVert.push(tx(x),wall_size,ty(z+1)); 	// top right
+
+			aUV.push(0,0, 0,1, 1,1, 1,0);		//Quad's UV
+			aIndex.push(qi,qi+1,qi+2, qi+2,qi+3,qi);	//Quad's Index
+
+			// aUV = [ 0,0, 0,1, 1,1, 1,0 ],
+			// aIndex = [ 0,1,2,  2,3,0 ];
+
+
+		}
+
+		let drawWall = (celda) => {
+			var i = celda.x;
+			var j = celda.y;
+
+			// addHorizontalWall();
+
+			
+
+			if(celda.estado === "cerrada"){
+				// linea arriba
+				if(j===0 || matriz[i][j-1].estado !== "cerrada"){
+					addHorizontalWall(i,j,quadCounter);
+					quadCounter += 4;
+					// addHorizontalWall();
+					// addVertex(tx(i),  0, ty(j),0);
+					// addVertex(tx(i+1),  0, ty(j),0); 
+				}
+				
+			// 	// linea derecha
+				if(i===x-1 || matriz[i+1][j].estado !== "cerrada"){
+
+					// addVertex(tx(i+1),  0, ty(j),0); 
+					// addVertex(tx(i+1),  0, ty(j+1),0);
+					addVerticalWall(i+1,j,quadCounter);
+					quadCounter += 4;
+				}
+
+				// linea abajo
+				if(j===y-1 || matriz[i][j+1].estado !== "cerrada"){
+					// addVertex(tx(i+1),  0, ty(j+1),0);
+					// addVertex(tx(i),  0, ty(j+1),0);
+
+					addHorizontalWall(i,j+1,quadCounter);
+					quadCounter += 4;
+				}
+				
+			// 	// linea izq
+				if(i===0 || matriz[i-1][j].estado !== "cerrada"){
+					// addVertex(tx(i),  0, ty(j+1),0);
+					// addVertex(tx(i),  0, ty(j),0);
+					addVerticalWall(i,j,quadCounter);
+					quadCounter += 4;
+				}
+				
+			}
+
+		};
 
 		let drawSquare = (celda) => {
 			var i = celda.x;
@@ -123,12 +227,28 @@ Primatives.GridAxis = class {
 			}
 		}
 
+		
+		// var quadCounter = 0;
 		for(let i = 0; i < x; i++) {
 			for(let j=0; j < y; j++) {
 				celda = matriz[i][j];
 				drawSquare(celda);
+
+				// WIP paredes
+				drawWall(celda,quadCounter);
+
 			}
 		}
+
+		// console.log(aVert);
+		// console.log(aUV);
+		// console.log(aIndex);
+		// console.log(quadCounter);
+
+		var meshQ = gl.fCreateMeshVAO("paredes",aIndex,aVert,null,aUV);
+		meshQ.noCulling = true;
+		meshQ.doBlending = true;
+		gl.mMeshCache["paredes"] = meshQ;
 
 		//Setup
 		var attrColorLoc = 4,
@@ -170,6 +290,6 @@ Primatives.GridAxis = class {
 		gl.bindVertexArray(null);
 		gl.bindBuffer(gl.ARRAY_BUFFER,null);
 		gl.mMeshCache["grid"] = mesh;
-		return mesh;
+		// return mesh;
 	}
 }
