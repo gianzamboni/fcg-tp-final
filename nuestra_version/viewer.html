@@ -120,9 +120,11 @@
 		uniform mat4 uCameraMatrix;
 
 		out vec2 uv;
+		out vec3 position;
 
 		void main(void){
 			uv = a_uv;
+			position = a_position;
 			gl_Position = uPMatrix * uCameraMatrix * uMVMatrix * vec4(a_position, 1.0); 
 		}
 	</script>
@@ -130,6 +132,7 @@
 	<script id="fragment_shader" type="x-shader/x-fragment">#version 300 es
 		precision mediump float;
 		in vec2 uv;
+		in vec3 position;
 
 		out vec4 finalColor;
 		void main(void){
@@ -138,8 +141,16 @@
 			float c = (uv.x <= 0.1 || uv.x >=0.9 || uv.y <= 0.1 || uv.y >= 0.9)? 0.0 : 1.0;
 			finalColor = vec4(c,c,c,1.0-c);
 			*/
-			float c = 0.5;
-			finalColor = vec4(c,c,c,1.0);
+
+			float r = 0.5;
+			float g = (position.y == 0.0)? 0.1 : 0.5;
+			float b = (position.y == 0.0)? 0.1 : 0.5;
+
+			// floorColor fc 
+			// float c = vec4(131.0,175.0,82.0,1.0);
+			// float c = 0.5;
+			// finalColor = vec4(c,c,c,1.0);
+			finalColor = vec4(r,g,b,1.0);
 
 			//Circle
 			/*

@@ -77,6 +77,7 @@ Primatives.GridAxis = class {
 		var matriz = laberinto.matriz;
 		var verts = [];
 		var	size = 1.8;	// tamaño arbitrario a usar del canvas
+		var midSize = size/2;
 		var quadCounter = 0;
 
 
@@ -123,6 +124,16 @@ Primatives.GridAxis = class {
 
 		}
 
+		let addFloor = (qi) => {
+			aVert.push(-midSize, 0,  midSize); 	// top left
+			aVert.push(-midSize, 0, -midSize); 			// bottom left
+			aVert.push( midSize, 0, -midSize);			//bottom right
+			aVert.push( midSize, 0,  midSize); 	// top right
+
+			aUV.push(0,0, 0,1, 1,1, 1,0);		//Quad's UV
+			aIndex.push(qi,qi+1,qi+2, qi+2,qi+3,qi);	//Quad's Index
+		};
+
 		// let addVerticalWall
 
 		let addVerticalWall = (x,z,qi) => {
@@ -147,6 +158,16 @@ Primatives.GridAxis = class {
 
 
 		}
+
+		let addCeiling = (x,z,qi) => {
+			aVert.push(tx(x)  , wall_size, ty(z)); 	// top left
+			aVert.push(tx(x)  , wall_size, ty(z+1)); 			// bottom left
+			aVert.push(tx(x+1), wall_size, ty(z+1));			//bottom right
+			aVert.push(tx(x+1), wall_size, ty(z)); 	// top right
+
+			aUV.push(0,0, 0,1, 1,1, 1,0);		//Quad's UV
+			aIndex.push(qi,qi+1,qi+2, qi+2,qi+3,qi);	//Quad's Index
+		};
 
 		let drawWall = (celda) => {
 			var i = celda.x;
@@ -191,6 +212,12 @@ Primatives.GridAxis = class {
 					addVerticalWall(i,j,quadCounter);
 					quadCounter += 4;
 				}
+
+				// agregar techo
+				addCeiling(i,j,quadCounter);
+				quadCounter += 4;
+
+
 				
 			}
 
@@ -239,6 +266,7 @@ Primatives.GridAxis = class {
 
 			}
 		}
+		addFloor(quadCounter);
 
 		// console.log(aVert);
 		// console.log(aUV);
