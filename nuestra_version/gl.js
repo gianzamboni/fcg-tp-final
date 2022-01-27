@@ -21,6 +21,7 @@ function GLInstance(canvasID){
 	//...................................................
 	//Setup custom properties
 	gl.mMeshCache = [];	//Cache all the mesh structs, easy to unload buffers if they all exist in one place.
+	gl.mTextureCache = [];
 
 	//...................................................
 	//Setup GL, Set all the default configurations we need.
@@ -109,6 +110,23 @@ function GLInstance(canvasID){
 		return rtn;
 	}
 
+	gl.fLoadTexture = function(name,img,doYFlip){
+		var tex = this.createTexture();
+		if(doYFlip == true) this.pixelStorei(this.UNPACK_FLIP_Y_WEBGL, true);	//Flip the texture by the Y Position, So 0,0 is bottom left corner.
+
+		this.bindTexture(this.TEXTURE_2D, tex);														//Set text buffer for work
+		this.texImage2D(this.TEXTURE_2D, 0, this.RGBA, this.RGBA, this.UNSIGNED_BYTE, img);			//Push image to GPU.
+		
+		this.texParameteri(this.TEXTURE_2D, this.TEXTURE_MAG_FILTER, this.LINEAR);					//Setup up scaling
+		this.texParameteri(this.TEXTURE_2D, this.TEXTURE_MIN_FILTER, this.LINEAR_MIPMAP_NEAREST);	//Setup down scaling
+		this.generateMipmap(this.TEXTURE_2D);	//Precalc different sizes of texture for better quality rendering.
+
+		this.bindTexture(this.TEXTURE_2D,null);									//Unbind
+		this.mTextureCache[name] = tex;											//Save ID for later unloading
+		
+		if(doYFlip == true) this.pixelStorei(this.UNPACK_FLIP_Y_WEBGL, false);	//Stop flipping textures
+		return tex;		
+	}
 
 	//...................................................
 	//Setters - Getters
