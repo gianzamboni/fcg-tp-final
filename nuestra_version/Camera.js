@@ -12,7 +12,9 @@ class Camera{
 	}
 
 	panX(v){
-		if(this.mode == Camera.MODE_ORBIT) return; // Panning on the X Axis is only allowed when in free mode
+		// comente esto porque nos cagaba el movimiento con wasd
+		// if(this.mode == Camera.MODE_ORBIT) return; // Panning on the X Axis is only allowed when in free mode
+
 		this.updateViewMatrix();
 		this.transform.position.x += this.transform.right[0] * v;
 		this.transform.position.y += this.transform.right[1] * v;
@@ -83,8 +85,15 @@ class CameraController{
 
 		this.initX = 0;									//Starting X,Y position on mouse down
 		this.initY = 0;
+
+		// probablemente innecesario
+		this.initZ = 0;
+
 		this.prevX = 0;									//Previous X,Y position on mouse move
 		this.prevY = 0;
+		
+		// probablemente innecesario
+		this.prevZ = 0;
 
 		this.onUpHandler = (event) => this.onMouseUp(event);		//Cache func reference that gets bound and unbound a lot
 		this.onMoveHandler = (event) => this.onMouseMove(event);
@@ -94,6 +103,7 @@ class CameraController{
 			event.preventDefault();	
 			this.onMouseWheel(event); 
 		});	//Handles zoom/forward movement
+		this.canvas.addEventListener("keydown", (event) => this.onKeyDown(event));
 	}
 
 	//Transform mouse x,y cords to something useable by the canvas.
@@ -137,4 +147,40 @@ class CameraController{
 		this.prevX = x;
 		this.prevY = y;
 	}
+
+	// tiene un bug. Funca bien con el canvas default, pero cuando miramos el 
+	// laberinto de costado, el panX te lleva a cualquier lado
+
+	onKeyDown(e){
+		e.preventDefault();
+
+		const keyName = e.key;
+		switch(keyName){
+
+			case 'ArrowDown':
+			case 's':
+				this.camera.panZ( 5 * (this.panRate / this.canvas.height) );
+				break;
+			
+			case 'ArrowUp':
+			case 'w':
+				this.camera.panZ( -5* (this.panRate / this.canvas.height) );
+				break;
+			
+			case 'ArrowLeft':
+			case 'a':
+				this.camera.panX( -5 * (this.panRate / this.canvas.width) );
+				break;
+			
+			case 'ArrowRight':
+			case 'd':
+				this.camera.panX( 5 * (this.panRate / this.canvas.width) );
+				break;
+
+			default:
+				console.log(`Key pressed ${keyName}`);
+				break;
+
+		}
+	};
 }
