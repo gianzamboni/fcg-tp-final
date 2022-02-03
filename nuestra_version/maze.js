@@ -67,21 +67,61 @@ function getRandomArbitrary(min, max) {
 function agregarEntradaYSalida(laberinto){
     let x = laberinto.x;
     let y = laberinto.y;
-    
-    // busco entrada posible desde izquierda a derecha en primer fila
-    for(var i=1; i<x-2;i++){
-        if(laberinto.matriz[i][1].estado=="abierta"){
-            laberinto.matriz[i][0].estado="abierta";
-            break;
-        }
+
+    // un lado del laberinto aleatorio para la entrada 
+    let ladoEntrada = getRandomArbitrary(0,4); // 0 = izq, 1= arriba, 2=derecha, 3=abajo
+    let ladoSalida = getRandomArbitrary(0,4);
+    // entrada y salida de lados distintos
+    while(ladoEntrada===ladoSalida){
+        ladoSalida = getRandomArbitrary(0,4);
     }
 
-    // busco salida posible desde abajo hacia arriba en ultima columna
-    for(var i=y-2; i>0;i--){
-        if(laberinto.matriz[x-2][i].estado=="abierta"){
-            laberinto.matriz[x-1][i].estado="abierta";
-            break;
+    // izquierda laberinto
+    if (ladoEntrada === 0 || ladoSalida === 0){
+        // busco entrada posible en pared izquierda
+            while(true){
+                let i = getRandomArbitrary(1,y-1);
+                if(laberinto.matriz[1][i].estado==="abierta"){
+                    laberinto.matriz[0][i].estado="abierta";
+                    break;
+                }
+            }  
         }
+
+    // derecha laberinto
+    if (ladoEntrada === 2 || ladoSalida === 2){
+        // busco entrada posible en pared derecha
+            while(true){
+                let i = getRandomArbitrary(1,y-1);
+                if(laberinto.matriz[y-2][i].estado==="abierta"){
+                    laberinto.matriz[y-1][i].estado="abierta";
+                    break;
+                }
+            }  
+        }
+
+    // arriba laberinto
+    if (ladoEntrada === 1 || ladoSalida === 1){
+    // busco entrada posible en primer fila
+        while(true){
+            let i = getRandomArbitrary(1,x-1);
+            if(laberinto.matriz[i][1].estado==="abierta"){
+                laberinto.matriz[i][0].estado="abierta";
+                break;
+            }
+        }  
+    }
+
+    // abajo laberinto
+    if (ladoEntrada === 3 || ladoSalida === 3){
+        // busco entrada posible en ultima fila
+            while(true){
+                let i = getRandomArbitrary(1,x-1);
+                if(laberinto.matriz[i][y-2].estado==="abierta"){
+                    laberinto.matriz[i][y-1].estado="abierta";
+                    break;
+                }
+            }  
     }
 }
 
