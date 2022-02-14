@@ -12,21 +12,29 @@ class Camera{
 	}
 
 	panX(v){
-		// comente esto porque nos cagaba el movimiento con wasd
-		// if(this.mode == Camera.MODE_ORBIT) return; // Panning on the X Axis is only allowed when in free mode
-
 		this.updateViewMatrix();
-		this.transform.position.x += this.transform.right[0] * v;
-		this.transform.position.y += this.transform.right[1] * v;
+		if(this.mode == Camera.MODE_ORBIT){
+			this.transform.position.x += v; //orbit mode does translate after rotate, so only need to set Z, the rotate will handle the rest.
+		}else{
+			this.transform.position.x += this.transform.right[0] * v;
+			this.transform.position.y += this.transform.right[1] * v;
+			this.transform.position.z += this.transform.right[2] * v; 
 		this.transform.position.z += this.transform.right[2] * v; 
+			this.transform.position.z += this.transform.right[2] * v; 
+		}
 	}
 
 	panY(v){
 		this.updateViewMatrix();
-		this.transform.position.y += this.transform.up[1] * v;
-		if(this.mode == Camera.MODE_ORBIT) return; //Can only move up and down the y axix in orbit mode
-		this.transform.position.x += this.transform.up[0] * v;
+		if(this.mode == Camera.MODE_ORBIT){
+			this.transform.position.y += v; //orbit mode does translate after rotate, so only need to set Z, the rotate will handle the rest.
+		}else{
+			this.transform.position.y += this.transform.up[1] * v;
+			this.transform.position.x += this.transform.up[0] * v;
+			this.transform.position.z += this.transform.up[2] * v;
 		this.transform.position.z += this.transform.up[2] * v; 
+			this.transform.position.z += this.transform.up[2] * v;
+		}
 	}
 
 	panZ(v){
@@ -169,12 +177,12 @@ class CameraController{
 			
 			case 'ArrowLeft':
 			case 'a':
-				this.camera.panX( -5 * (this.panRate / this.canvas.width) );
+				this.camera.panX( -5 * (this.panRate / this.canvas.height) );
 				break;
 			
 			case 'ArrowRight':
 			case 'd':
-				this.camera.panX( 5 * (this.panRate / this.canvas.width) );
+				this.camera.panX( 5 * (this.panRate / this.canvas.height) );
 				break;
 
 			default:
