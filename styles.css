@@ -58,7 +58,7 @@ html,body{
     height: 100vh;
     position: fixed;
     background-color: #404040;
-    left: -20vw;
+    left: -25vw;
     transition: all;
     transition-duration: 300ms;
     flex-direction: column;
@@ -137,7 +137,7 @@ h5 {
 }
 
 .control-div {
-    background-color: rgba(64,64,64.50);
+    background-color: rgba(64,64,64,0.9);
     box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.54);
     border-radius: 5PX;
     padding: 20px;
