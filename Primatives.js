@@ -32,64 +32,67 @@ Primatives.Quad = class {
 	}
 }
 
-Primatives.MultiQuad = class {
-	static createModal(gl){ return new Modal(Primatives.MultiQuad.createMesh(gl)); }
-	static createMesh(gl){
-		var	aIndex = [ ], //0,1,2, 2,3,0
-			aUV = [ ], //0,0, 0,1, 1,1, 1,0 
-			aVert = [];		
+// Primatives.MultiQuad = class {
+// 	static createModal(gl){ return new Modal(Primatives.MultiQuad.createMesh(gl)); }
+// 	static createMesh(gl){
+// 		var	aIndex = [ ], //0,1,2, 2,3,0
+// 			aUV = [ ], //0,0, 0,1, 1,1, 1,0 
+// 			aVert = [];		
 
-		for(var i=0; i < 10; i++){
-			//Calculate a random size, y rotation and position for the quad
-			var size = 0.2 + (0.8* Math.random()),		//Random Quad Size in the range of 0.2 - 1.0
-				half = size * 0.5,						//Half of size, this is the radius for rotation
-				angle = Math.PI * 2 * Math.random(),	//Random angle between 0 - 360 degrees in radians
-				dx = half * Math.cos(angle),			//Calc the x distance, used as an offset for the random position
-				dy = half * Math.sin(angle),			//Calc the y distance, for same offset but used in z 
-				x = -2.5 + (Math.random()*5),			//Random position between -2.5 - 2.5
-				y = -2.5 + (Math.random()*5),			
-				z = 2.5 - (Math.random()*5),
-				p = i * 4;								//Index of the first vertex of a quad
+// 		for(var i=0; i < 10; i++){
+// 			//Calculate a random size, y rotation and position for the quad
+// 			var size = 0.2 + (0.8* Math.random()),		//Random Quad Size in the range of 0.2 - 1.0
+// 				half = size * 0.5,						//Half of size, this is the radius for rotation
+// 				angle = Math.PI * 2 * Math.random(),	//Random angle between 0 - 360 degrees in radians
+// 				dx = half * Math.cos(angle),			//Calc the x distance, used as an offset for the random position
+// 				dy = half * Math.sin(angle),			//Calc the y distance, for same offset but used in z 
+// 				x = -2.5 + (Math.random()*5),			//Random position between -2.5 - 2.5
+// 				y = -2.5 + (Math.random()*5),			
+// 				z = 2.5 - (Math.random()*5),
+// 				p = i * 4;								//Index of the first vertex of a quad
 
-			//Build the 4 points of the quad
-			aVert.push(x-dx, y+half, z-dy);		//TOP LEFT
-			aVert.push(x-dx, y-half, z-dy);		//BOTTOM LEFT
-			aVert.push(x+dx, y-half, z+dy);		//BOTTOM RIGHT			
-			aVert.push(x+dx, y+half, z+dy);		//TOP RIGHT
+// 			//Build the 4 points of the quad
+// 			aVert.push(x-dx, y+half, z-dy);		//TOP LEFT
+// 			aVert.push(x-dx, y-half, z-dy);		//BOTTOM LEFT
+// 			aVert.push(x+dx, y-half, z+dy);		//BOTTOM RIGHT			
+// 			aVert.push(x+dx, y+half, z+dy);		//TOP RIGHT
 
-			aUV.push(0,0, 0,1, 1,1, 1,0);		//Quad's UV
-			aIndex.push(p,p+1,p+2, p+2,p+3,p);	//Quad's Index
-		}
+// 			aUV.push(0,0, 0,1, 1,1, 1,0);		//Quad's UV
+// 			aIndex.push(p,p+1,p+2, p+2,p+3,p);	//Quad's Index
+// 		}
 
-		var mesh = gl.fCreateMeshVAO("MultiQuad",aIndex,aVert,null,aUV);
-		mesh.noCulling = true;
-		mesh.doBlending = true;
-		return mesh;
-	}
-}
+// 		var mesh = gl.fCreateMeshVAO("MultiQuad",aIndex,aVert,null,aUV);
+// 		mesh.noCulling = true;
+// 		mesh.doBlending = true;
+// 		return mesh;
+// 	}
+// }
 
 Primatives.GridAxis = class {
-	static createModal(gl,laberinto){ return new Modal(Primatives.GridAxis.createMesh(gl,laberinto)); }
-	static createMesh(gl, laberinto){
+	static createModal(gl,laberinto, size_x = 1.8, size_y = 1.8, wall_size = 0.1){ 
+		return new Modal(Primatives.GridAxis.createMesh(gl,laberinto, size_x, size_y, wall_size)); 
+	}
+	static createMesh(gl, laberinto, size_x, size_y, wall_size){
 		//Dynamiclly create a grid
 		var x = laberinto.x;
 		var y = laberinto.y;
 		var matriz = laberinto.matriz;
 		var verts = [];
-		var	size = 1.8;	// tamaño arbitrario a usar del canvas
-		var midSize = size/2;
+		// var	size = 5.0;	// tamaño arbitrario a usar del canvas
+		var midSize_x = size_x/2;
+		var midSize_y = size_y/2;
 		var quadCounter = 0;
 
 
-		var wall_size = 0.1; // altura de la pared
+		// var wall_size = 0.5; // altura de la pared
 		var	aIndex = [ ], //0,1,2, 2,3,0
 		aUV = [ ], //0,0, 0,1, 1,1, 1,0 
 		aVert = [];		
 
-		var stepX = size/ x;
-		var stepY = size/ y;
-		const tx = (px) => (px * stepX )-0.9; // transformaciones
-		const ty = (py) => (-py * stepY )+0.9;
+		var stepX = size_x/ x;
+		var stepY = size_y/ y;
+		const tx = (px) => (px * stepX )-midSize_x; // transformaciones
+		const ty = (py) => (-py * stepY )+midSize_y;
 		// test dibujar de a celdas 
 		var celda;
 
@@ -109,7 +112,6 @@ Primatives.GridAxis = class {
 			// aVert.push(-size/2,0,size/2); 			// bottom left
 			// aVert.push(size/2,0,size/2); 			//bottom right
 			// aVert.push(size/2,wall_size,size/2 ); 	// top right
-
 			aVert.push(tx(x)  ,wall_size,ty(z)); 	// top left
 			aVert.push(tx(x)  ,0        ,ty(z)); 			// bottom left
 			aVert.push(tx(x+1),0        ,ty(z));			//bottom right
@@ -125,10 +127,10 @@ Primatives.GridAxis = class {
 		}
 
 		let addFloor = (qi) => {
-			aVert.push(-midSize, 0,  midSize); 	// top left
-			aVert.push(-midSize, 0, -midSize); 			// bottom left
-			aVert.push( midSize, 0, -midSize);			//bottom right
-			aVert.push( midSize, 0,  midSize); 	// top right
+			aVert.push(-midSize_x, 0,  midSize_y); 	// top left
+			aVert.push(-midSize_x, 0, -midSize_y); 			// bottom left
+			aVert.push( midSize_x, 0, -midSize_y);			//bottom right
+			aVert.push( midSize_x, 0,  midSize_y); 	// top right
 
 			aUV.push(0,0, 0,1, 1,1, 1,0);		//Quad's UV
 			aIndex.push(qi,qi+1,qi+2, qi+2,qi+3,qi);	//Quad's Index

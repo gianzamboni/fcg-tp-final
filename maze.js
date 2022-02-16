@@ -1,11 +1,7 @@
-// var laberintoCreado;
-
 function duom(){
-
-    var a = parseInt(document.getElementById("height").value);
-    var b = parseInt(document.getElementById("width").value);
-
-    var laberintoCreado = mazePrim(a,b);
+    var a = parseInt(document.getElementById("maze-height").value);
+    var b = parseInt(document.getElementById("maze-width").value);
+    [laberintoCreado, coord_x_entrada, coord_y_entrada] = mazePrim(a,b);
     updateCanvas(laberintoCreado);
 }
 
@@ -68,6 +64,8 @@ function agregarEntradaYSalida(laberinto){
     let x = laberinto.x;
     let y = laberinto.y;
 
+    let coord_x_entrada, coord_y_entrada; 
+
     // un lado del laberinto aleatorio para la entrada 
     let ladoEntrada = getRandomArbitrary(0,4); // 0 = izq, 1= arriba, 2=derecha, 3=abajo
     let ladoSalida = getRandomArbitrary(0,4);
@@ -83,6 +81,11 @@ function agregarEntradaYSalida(laberinto){
                 let i = getRandomArbitrary(1,y-1);
                 if(laberinto.matriz[1][i].estado==="abierta"){
                     laberinto.matriz[0][i].estado="abierta";
+                    if(ladoEntrada === 0){
+                        // console.log()
+                        coord_x_entrada = 0;
+                        coord_y_entrada = i;
+                    }
                     break;
                 }
             }  
@@ -92,9 +95,13 @@ function agregarEntradaYSalida(laberinto){
     if (ladoEntrada === 2 || ladoSalida === 2){
         // busco entrada posible en pared derecha
             while(true){
-                let i = getRandomArbitrary(1,y-1);
+                let i = getRandomArbitrary(1,x-1);
                 if(laberinto.matriz[y-2][i].estado==="abierta"){
                     laberinto.matriz[y-1][i].estado="abierta";
+                    if(ladoEntrada === 2){
+                        coord_x_entrada = y-1;
+                        coord_y_entrada = i;
+                    }
                     break;
                 }
             }  
@@ -107,6 +114,10 @@ function agregarEntradaYSalida(laberinto){
             let i = getRandomArbitrary(1,x-1);
             if(laberinto.matriz[i][1].estado==="abierta"){
                 laberinto.matriz[i][0].estado="abierta";
+                if(ladoEntrada === 1){
+                    coord_x_entrada = i;
+                    coord_y_entrada = 0;
+                }
                 break;
             }
         }  
@@ -119,10 +130,16 @@ function agregarEntradaYSalida(laberinto){
                 let i = getRandomArbitrary(1,x-1);
                 if(laberinto.matriz[i][y-2].estado==="abierta"){
                     laberinto.matriz[i][y-1].estado="abierta";
+                    if(ladoEntrada === 3){
+                        coord_x_entrada = i;
+                        coord_y_entrada = y-1;
+                    }
                     break;
                 }
             }  
     }
+
+    return [coord_x_entrada, coord_y_entrada];
 }
 
 function mazePrim(x,y) {
@@ -150,9 +167,9 @@ function mazePrim(x,y) {
         }
     }
 
-    agregarEntradaYSalida(laberinto);
+    let [entrada_x, entrada_y] = agregarEntradaYSalida(laberinto);
     
-    return laberinto;
+    return [laberinto, entrada_x, entrada_y];
 }
 
 function display(m) {

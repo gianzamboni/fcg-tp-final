@@ -19,7 +19,7 @@ class Camera{
 			this.transform.position.x += this.transform.right[0] * v;
 			this.transform.position.y += this.transform.right[1] * v;
 			this.transform.position.z += this.transform.right[2] * v; 
-		this.transform.position.z += this.transform.right[2] * v; 
+			this.transform.position.z += this.transform.right[2] * v; 
 			this.transform.position.z += this.transform.right[2] * v; 
 		}
 	}
@@ -32,7 +32,7 @@ class Camera{
 			this.transform.position.y += this.transform.up[1] * v;
 			this.transform.position.x += this.transform.up[0] * v;
 			this.transform.position.z += this.transform.up[2] * v;
-		this.transform.position.z += this.transform.up[2] * v; 
+			this.transform.position.z += this.transform.up[2] * v; 
 			this.transform.position.z += this.transform.up[2] * v;
 		}
 	}

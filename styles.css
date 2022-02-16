@@ -1,0 +1,153 @@
+html,body{
+    color: #FFFFFF;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    height:100%;
+    margin:0px; 
+    overflow: hidden;
+    padding:0px; 
+    width:100%; 
+}
+
+#modifyForm  {
+    display: grid;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    grid-template-columns: auto auto 40px;
+    padding: 10px;
+    background-color: #505050;
+    border-radius: 5px;
+}
+
+#maze {
+    display: grid;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    grid-template-columns: auto auto 30px;
+    padding: 10px;
+    background-color: #505050;
+    border-radius: 5px;
+}
+
+#maze input[type="button"] {
+    height: 30px;
+    border: 1px solid black;
+    border-radius: 5px;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    width: 40%;
+    justify-self: center;
+}
+
+.grid-container-right {
+    display: flex;
+    text-align: right;
+    align-items:center;
+}
+
+#maze div {
+    size: 100%;
+    margin: 10px;
+}
+
+#settings-menu {
+    display: block;
+    height: 100vh;
+    position: fixed;
+    background-color: #404040;
+    left: -20vw;
+    transition: all;
+    transition-duration: 300ms;
+    flex-direction: column;
+    padding: 20px;
+    box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.54);
+}
+
+#menu-close-button {
+    display: flex;
+}
+
+#menu-close-button div {
+    align-self: center;
+    margin-left: auto;
+}
+
+.action-menu {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    padding: 10px;
+    left: 20px;
+    top: 20px;
+}
+
+.action-menu:first-child {
+    margin-top: 0;
+}
+
+.action-menu > * {
+    margin-top: 10px;
+}
+
+.action-button {
+    background-color: #404040;
+    box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.54);
+    border-radius: 5px;
+    transition-property: all; 
+    transition-duration: 150ms;
+    padding: 0px;
+    height: 70px; 
+    width: 70px;
+    display: flex;
+    justify-content: center;
+    align-items:center;
+}
+
+#settings-button:hover {
+    background-color: #110d0d;
+    box-shadow: 5px 10px 10px 0px rgba(0, 0, 0, 0.54);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+  font-family: "Robot", sans-serif;
+  font-size: 16px;
+  text-align: center;
+  border-radius: 5px;
+  border: none;
+}
+
+h5 {
+    margin-bottom: 5px;
+}
+
+.control-description {
+    font-weight: 200;
+    text-align: end;
+}
+
+.control-div {
+    background-color: rgba(64,64,64.50);
+    box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.54);
+    border-radius: 5PX;
+    padding: 20px;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 20px;
+    row-gap: 10px;
+    justify-content: center;
+    align-items:center;
+}
