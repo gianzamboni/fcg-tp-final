@@ -2,6 +2,10 @@ function duom(){
     var a = parseInt(document.getElementById("maze-height").value);
     var b = parseInt(document.getElementById("maze-width").value);
     [laberintoCreado, coord_x_entrada, coord_y_entrada] = mazePrim(a,b);
+    entrada_x = coord_x_entrada;
+    entrada_z = coord_y_entrada;
+    height_act = a;
+    width_act = b;
     updateCanvas(laberintoCreado);
 }
 

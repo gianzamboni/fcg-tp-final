@@ -19,8 +19,6 @@ class Camera{
 			this.transform.position.x += this.transform.right[0] * v;
 			this.transform.position.y += this.transform.right[1] * v;
 			this.transform.position.z += this.transform.right[2] * v; 
-			this.transform.position.z += this.transform.right[2] * v; 
-			this.transform.position.z += this.transform.right[2] * v; 
 		}
 	}
 
@@ -29,10 +27,8 @@ class Camera{
 		if(this.mode == Camera.MODE_ORBIT){
 			this.transform.position.y += v; //orbit mode does translate after rotate, so only need to set Z, the rotate will handle the rest.
 		}else{
-			this.transform.position.y += this.transform.up[1] * v;
 			this.transform.position.x += this.transform.up[0] * v;
-			this.transform.position.z += this.transform.up[2] * v;
-			this.transform.position.z += this.transform.up[2] * v; 
+			this.transform.position.y += this.transform.up[1] * v;
 			this.transform.position.z += this.transform.up[2] * v;
 		}
 	}
@@ -47,6 +43,11 @@ class Camera{
 			this.transform.position.y += this.transform.forward[1] * v;
 			this.transform.position.z += this.transform.forward[2] * v; 
 		}
+	}
+
+	changeMode(){
+		this.mode = this.mode === Camera.MODE_ORBIT ? Camera.MODE_FREE : Camera.MODE_ORBIT;
+		return this.mode;
 	}
 
 	//To have different modes of movements, this function handles the view matrix update for the transform object.
@@ -147,17 +148,16 @@ class CameraController{
 		if(!e.shiftKey){
 			this.camera.transform.rotation.y += dx * (this.rotateRate / this.canvas.width);
 			this.camera.transform.rotation.x += dy * (this.rotateRate / this.canvas.height);
+			this.camera.transform.rotation.Z += dx * (this.rotateRate / this.canvas.height);
 		}else{
 			this.camera.panX( -dx * (this.panRate / this.canvas.width) );
 			this.camera.panY( dy * (this.panRate / this.canvas.height) );
+			this.camera.panZ( dx * (this.panRate / this.canvas.width) );
 		}
 
 		this.prevX = x;
 		this.prevY = y;
 	}
-
-	// tiene un bug. Funca bien con el canvas default, pero cuando miramos el 
-	// laberinto de costado, el panX te lleva a cualquier lado
 
 	onKeyDown(e){
 		e.preventDefault();
